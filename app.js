@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
 const cors = require('cors');
-const dbURI = 'mongodb://127.0.0.1:27017/susumige';
+const dbURI = 'http://10.111.1.2';
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 
@@ -24,8 +24,7 @@ const corsOptions = {
                      'Authorization', 
                      'X-Requested-With', 'Accept', 'Origin'
     ],
-    origin: ['http://localhost:4200', 
-             'http://localhost:4400'],
+    origin: ['http://10.111.1.2:8000'],
     credentials: true
 };
 
@@ -39,8 +38,8 @@ app.use('', deleteRoutes);
 
 mongoose.connect(dbURI)
         .then(() => {
-            app.listen(5000, () => {
-                console.log("App is listening on port 5000....")
+            app.listen(8000, () => {
+                console.log("App is listening on port 8000....")
             });
         })
         .catch(error => {
