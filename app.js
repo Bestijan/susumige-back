@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
 const cors = require('cors');
-const dbURI = 'mongodb://shushumige-25931:OxIN3xAvwMHKHBtTQZccQxqX0Gj2C0@db-shushumige-25931.nodechef.com:5361/shushumige';
+const dbURI = 'mongodb://shushumige-25931:OxIN3xAvwMHKHBtTQZccQxqX0Gj2C0@db-shushumige-25931.nodechef.com:5361/shushumige?ssl=true';
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 
