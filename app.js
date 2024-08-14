@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
 const cors = require('cors');
-const dbURI = 'http://10.111.1.2';
+const dbURI = 'mongodb://shushumige-25931:OxIN3xAvwMHKHBtTQZccQxqX0Gj2C0@db-shushumige-25931.nodechef.com:5361/shushumige';
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 
@@ -17,6 +17,7 @@ const postRoutes = require('./routes/postRoutes');
 const getRoutes = require('./routes/getRoutes');
 const putRoutes = require('./routes/putRoutes');
 const deleteRoutes = require('./routes/deleteRoutes');
+const { db } = require('./models/news');
 
 const corsOptions = {
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
@@ -24,7 +25,7 @@ const corsOptions = {
                      'Authorization', 
                      'X-Requested-With', 'Accept', 'Origin'
     ],
-    origin: ['http://10.111.1.2:8000'],
+    origin: ['https://shushumige.net'],
     credentials: true
 };
 
@@ -39,7 +40,7 @@ app.use('', deleteRoutes);
 mongoose.connect(dbURI)
         .then(() => {
             app.listen(8000, () => {
-                console.log("App is listening on port 8000....")
+                console.log("App is listening on port 8000....");
             });
         })
         .catch(error => {
