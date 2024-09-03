@@ -2,18 +2,16 @@ const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
 const cors = require('cors');
-const dbURI = 'mongodb://shushumige-25931:ILSCqLxW0t8aRgKGTz4sfzq7rJ80Mb@db-shushumige-25931.nodechef.com:5361/shushumige?ssl=true';
+const dbURI = 'mongodb://shushumigelaza-25931:4MkBWeUwjDrDGoGrAmQppP9DQPn53t@db-shushumigelaza-25931.nodechef.com:5361/shushumigelaza';
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const https = require('https');
 const fs = require('fs');
 
-
 app.use(cookieParser());
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 app.use(express());
-app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 const postRoutes = require('./routes/postRoutes');
@@ -27,7 +25,7 @@ const corsOptions = {
                      'Authorization', 
                      'X-Requested-With', 'Accept', 'Origin'
     ],
-    origin: '*',
+    origin: ['https://shushumige.net', 'https://www.shushumige.net', 'http://localhost:4200'],
     credentials: true
 };
 
@@ -39,27 +37,34 @@ app.use('', getRoutes);
 app.use('', putRoutes);
 app.use('', deleteRoutes);
 
-const privateKey = fs.readFileSync('./pk.pem', 'utf8');
-const certificate = fs.readFileSync('./SSLCA.pem', 'utf8');
+// const options = {
+//     key: fs.readFileSync('shushumige.net-privkey.pem'),
+//     cert: fs.readFileSync('shushumige.net-fullchain.pem')
+// };
 
-const credentials = { key: privateKey, cert: certificate };
+// const credentials = { 
+//     key: privateKey, 
+//     cert: certificate
+// };
 
-const httpsServer = https.createServer(credentials, app);
+const sslCA = fs.readFileSync('./SSLCA.pem');
+
+const httpsServer = https.createServer(sslCA);
 
 mongoose.connect(dbURI)
-        .then(() => {
-            app.listen(5361, () => {
-                console.log("App is listening on port 5361....");
-            });
-            // httpsServer.listen(5361, () => {
-            //     console.log(`HTTPS server listening on port 5361`);
-            // });
-        })
-        .catch(error => {
-            console.log(error);
+    .then(() => {
+        app.listen(process.env.PORT || 3000, () => {
+            console.log("App is listening....");
         });
-// app.get('/',   
-//     (req, res) => {
-//         res.send('Hello from NodeChef with HTTPS!');
-//     });
+        // httpsServer.listen(process.env.PORT || 3000 ,() => {
+        //     console.log(`HTTPS server listening...`);
+        // });
+    })
+    .catch(error => {
+        console.log(error);
+    });
+app.get('/',   
+    (req, res) => {
+        res.send('Hello from NodeChef with HTTPS!');
+    });
     

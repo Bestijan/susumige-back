@@ -1,4 +1,4 @@
-
+const News = require('../models/news');
 /**
  * Updates already writen news
  * @param {*} req 
@@ -37,14 +37,12 @@ exports.updateNews = async(req, res) => {
 exports.like = async(req, res) => {
     const newsId = req.body.newsId;
     const email = req.body.email;
-
     if (!newsId || !email) {
       return res.status(400).json({ message: 'newsId and email are required' });
     }
-  
-    let likes = await News.findOne({newsId: newsId});
 
     try {
+        let likes = await News.findOne({newsId: newsId});
         const ind = likes.likes.findIndex(l => l.get('email') === email);
         if (ind >= 0) {
             if (likes.likes[ind].get('liked')) {
