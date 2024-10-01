@@ -11,10 +11,9 @@ const chosen = 'ИЗАБРАНО';
 exports.bundleNews = async (req, res) => {
     News.find()
         .then((result) => {
-            const leftNews = result;
-            const headerNews = leftNews.filter(news => news.flag === popular);
-            const centralNews = leftNews.filter(news => news.flag === chosen);
-            return res.status(200).json({'header': headerNews, 'main': centralNews});
+            const headerNews = result.filter(news => news.flag === popular);
+            const centralNews = result.filter(news => news.flag === chosen);
+            return res.status(200).json({'leftNews': result.slice(0, 5), 'header': headerNews, 'main': centralNews});
     }).catch(error => {
         console.log(error);
     });
@@ -61,27 +60,58 @@ exports.news = async(req, res) => {
 };
 
 
+exports.mobileViewNews = async(req, res) => {
+    News.find()
+        .then((result) => {
+            return res.status(200).json(result.slice(0, 5));
+        })
+        .catch(error => {
+            return res.status(400).json(error);
+        }); 
+};
+
 /**
- * On scrolling up in leftsidebar
+ * On scrolling down in leftsidebar
  * loads previous news
  * @param {*} req 
  * @param {*} res 
  */
-exports.olderNews = async(req, res) => {
-    const gte = new Date(req.query.date);
-    const lte = new Date();
+exports.newerNews = async(req, res) => {
+    const gt = new Date(req.query.date);
 
-    var queryOlderNews = {
-        $gt: gte, $lte: lte
+    var queryNewerNews = {
+        $gt: gt
     };
 
-    await News.find({'date': queryOlderNews })
+    await News.findOne({'date' : queryNewerNews})
            .then(result => {
-                res.status(200).json(result.slice(0, 2));
+                res.status(200).json(result);
            }).catch(error => {
              console.log(error);
              res.status(400);
            });
+};
+
+/**
+ * On scrolling up in leftsidebar
+ * loads newer news
+ * @param {*} req 
+ * @param {*} res 
+ */
+exports.olderNews = async(req, res) => {
+    const lt = new Date(req.query.date);
+
+    var queryOlderNews = {
+        $lt: lt
+    };
+
+    await News.findOne({'date': queryOlderNews}).sort({date: -1})
+            .then(result => {
+                    res.status(200).json(result);
+            }).catch(error => {
+                console.log(error);
+                res.status(400);
+            });
 };
 
 /**

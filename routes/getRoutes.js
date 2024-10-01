@@ -6,6 +6,8 @@ const { verifyToken, checkRole } = require('../middleware/auth');
 router.get('/bundle-news', getController.bundleNews);
 router.get('/all-news', getController.allNews);
 router.get('/news', getController.news);
+router.get('/mobile-view-news', getController.mobileViewNews);
+router.get('/newer-news', getController.newerNews);
 router.get('/older-news', getController.olderNews);
 router.get('/section-news', getController.sectionNews);
 router.get('/search', getController.search);
